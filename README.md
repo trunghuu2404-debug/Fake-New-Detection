@@ -3,13 +3,18 @@
 ## Project structure
 ```
 Fake-News-Detection/
-├─ dataset                # contain our fake and real news dataset
-│  api.py                 # Flask API that handles URL prediction
-├─ interface.py           # Streamlit interface for user interaction
-├─ best_svm_model.pkl     # Trained SVM model
+├─ dataset                    # contain our fake and real news dataset
+├─ api.py                     # Flask API that handles URL prediction
+├─ interface.py               # Streamlit interface for user interaction
+├─ logistic_regression.ipynb  # Training notebook of LR model
+├─ model_svm.nb               # Training notebook of SVM model
+├─ model_nb.ipynb             # Training notebook of Naive Bayes model
+├─ best_svm_model.pkl         # Saved best SVM model
+├─ best_logreg_model.pkl      # Saved best Logistic regression model
+├─ best_nb_model.pkl          # Saved best Naive Bayes model
 ├─ README.md
 ```
-This project is a **fake news detection system** that takes a URL of a news article, scrapes its content, preprocesses it, and predicts whether the news is REAL or FAKE using a trained machine learning model (SVM).  
+This project is a **fake news detection system** that takes a URL of a news article, scrapes its content, preprocesses it, and predicts whether the news is REAL or FAKE using a best trained machine learning model (SVM).  
 
 It includes:  
 - A **Flask API** (`app.py`) that handles URL input, scrapes the article using `newspaper`, cleans the text, and returns predictions.  

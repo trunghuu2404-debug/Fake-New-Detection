@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, request, jsonify
 from newspaper import Article
 import joblib
@@ -15,13 +14,15 @@ nltk.download("stopwords")
 nltk.download("wordnet")
 nlp = spacy.load("en_core_web_sm")
 lemma = WordNetLemmatizer()
+
+# SpaCy stopwords
 spacy_stop = nlp.Defaults.stop_words
 
-# NLTK stopwords (convert list to set)
-nltk_stop = set(stopwords.words("english"))
+# NLTK stopwords
+nltk_stop = stopwords.words("english")
 
 # Combine them
-stop_words = spacy_stop | nltk_stop
+stop_words = set((set(spacy_stop) | set(nltk_stop)))
 
 # Load trained model
 loaded_model = joblib.load("best_svm_model.pkl")
@@ -29,8 +30,12 @@ loaded_model = joblib.load("best_svm_model.pkl")
 
 # Preprocessing function (identical from the notebook)
 def clean_text(text):
+    string = ""
+
+    # lower case
     text = text.lower()
-    # Simple contractions
+
+    # expand contradiction
     text = re.sub(r"i'm", "i am", text)
     text = re.sub(r"he's", "he is", text)
     text = re.sub(r"she's", "she is", text)
@@ -43,14 +48,17 @@ def clean_text(text):
     text = re.sub(r"\'d", " would", text)
     text = re.sub(r"won't", "will not", text)
     text = re.sub(r"can't", "cannot", text)
-    # Remove special characters
-    text = re.sub(r"[-()\"#!@$%^&*{}?.,:;']", " ", text)
+
+    # remove any special character
+    text = re.sub(r"[-()\"#!@$%^&*{}?.,:]", " ", text)
     text = re.sub(r"\s+", " ", text)
-    # Lemmatize and remove stopwords
-    cleaned = " ".join(
-        [lemma.lemmatize(w) for w in text.split() if w not in stop_words]
-    )
-    return cleaned
+    text = re.sub("[^A-Za-z0-9]+", " ", text)
+
+    for word in text.split():
+        if word not in stop_words:
+            string += lemma.lemmatize(word) + " "
+
+    return string
 
 
 # Flask app
